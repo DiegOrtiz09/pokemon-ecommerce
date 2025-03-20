@@ -1,0 +1,19 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# Ignoring node modules from both proyects back and front)
+Backend/node_modules/
+frontpoke/node_modules/
+
+# Ignore archivos de entorno
+Backend/.env
+
+# Ignorar archivos de configuración local
+*.local
+
+# Ignorar archivos de registro y temporales
+*.log
+*.tmp
+
+# Ignorar archivos de IDE
+.vscode/
+.idea/
