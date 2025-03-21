@@ -1,0 +1,111 @@
+.signup-page{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
+}
+
+.image-signup-section{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;;
+    height: 100%;
+}
+.image-signup-section img {
+    max-width: 100%;
+    height: auto;
+}
+
+.form-signup-container{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    height: 100%;
+    padding: 2rem;
+}
+
+.form-signup-section{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    background-color: #7BBFB4;
+    height: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.form-signup-section h2{
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    color: #333;
+}
+
+.input-signup-group{
+    margin-bottom: 1rem;   
+    width: 100%;
+}
+
+.input-signup-group input{
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.input-signup-group label{
+        display: block;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+        color: #555;
+}
+
+.input-signup-group:focus{
+    border-color: #1E3A5F;
+    outline: none;
+}
+
+.register-button{
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #F7D02C;
+    color: #555;
+    border: none;
+    border-radius: 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: backround-color 0.3s ease;
+}
+
+.register-button:hover{
+    background-color: #0056b3;
+    color: #fff;
+}
+
+.enter-button{
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    margin-top: 1rem;
+    background: none;
+    color: #0056b3;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: underline;
+    border: none;
+    border-radius: 15px;
+}
+
+.enter-button:hover{
+    color: #fff;
+    background-color: #0056b3;
+}

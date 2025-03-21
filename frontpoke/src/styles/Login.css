@@ -1,72 +1,115 @@
 /* Contenedor principal con dos columnas */
 .login-page {
     display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100vh; /* Ocupa toda la altura de la pantalla */
+    background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
   }
   
   /* Sección de la imagen */
   .image-section {
-    flex: 1; /* Ocupa la mitad del espacio */
+    flex: 1; 
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f0f0f0; /* Color de fondo opcional */
+    background-color: white; /* Color de fondo opcional */
+    height: 100%;
   }
   
   .image-section img {
     max-width: 100%;
     height: auto;
-    border-radius: 8px;
+    /*border-radius: 8px;*/
   }
+
+  .form-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white; /* Fondo amarillo */
+    height: 100%;
+    padding: 2rem;
+}
   
-  /* Sección del formulario */
   .form-section {
-    flex: 1; /* Ocupa la otra mitad */
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 20px;
-    background-color: white;
+    padding: 2rem;
+    background-color: #ffcc00;
+    height: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   }
   
-  h2 {
-    margin-bottom: 20px;
+  .form-section h2 {
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
     color: #333;
   }
   
   .input-group {
-    margin-bottom: 15px;
+    margin-bottom: 1rem;
     width: 100%;
-    max-width: 300px;
-    text-align: left;
+    /*max-width: 300px;
+    text-align: left;*/
   }
-  
-  .input-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
+
+  .input-group input::placeholder {
+    color: #999; 
+}
   
   .input-group input {
     width: 100%;
-    padding: 8px;
+    padding: 0.75rem;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-size: 1rem;
+    
   }
-  
-  button {
-    width: 100%;
-    max-width: 300px;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
+
+  .input-group input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.login-button{
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 15px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: backround-color 0.3s ease;
+}
+.login-button:hover{
+  background-color: #0056b3;
+}
+
+.signup-text{
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+.signup-button{
+  width: 100%;
+  max-width: 300px;
+  padding: 10px;
+  background: none;
+  color: #0056b3;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: underline;
+  border: none;
+  border-radius: 15px;
+}
+.signup-button:hover{
+  color: #fff;
+  background-color: #0056b3;
+}

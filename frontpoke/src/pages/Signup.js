@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import '../styles/Signup.css';
 
 const Signup = () => {
     const [username, setUsername] = useState('');
@@ -29,35 +30,47 @@ const Signup = () => {
     };
 
     return (
-        <div>
-            <h2>Registro</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Usuario:</label>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
+        <div className='signup-page'>
+            <div className='image-signup-section'>
+                <img src="/images/pokeimg.png" alt="SignUp image" />
+            </div>
+
+            <div className='form-signup-container'>
+                <div className='form-signup-section'>
+                    <h2>Register</h2>
+                    <form onSubmit={handleSubmit}>
+                        <div className='input-signup-group'>
+                        <div>
+                            <label>Username:</label>
+                            <input
+                                type="text"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                            />
+                        </div>
+                        <div>
+                            <label>Password:</label>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
+                        <div>
+                            <label>Email:</label>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </div>
+                        </div>
+                        <button type="submit" className='register-button'>Sign Up</button>
+                    </form>
+                    <button type='button' onClick={() => navigate('/login')} className='enter-button'>I already have an account</button>
                 </div>
-                <div>
-                    <label>Contraseña:</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>Email:</label>
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                </div>
-                <button type="submit">Registrarse</button>
-            </form>
+            </div>
+            
         </div>
     );
 };

@@ -39,31 +39,39 @@ const Login = ({ setIsAuthenticated }) => {
     <div className="login-page">
       {/* Sección de la imagen */}
       <div className="image-section">
-        <img src="https://via.placeholder.com/500" alt="Imagen de Login" />
+        <img src="/images/pokeimg.png" alt="Imagen de Login" />
       </div>
 
+      <div className='form-container'>
       {/* Sección del formulario */}
       <div className="form-section">
-        <h2>Iniciar Sesión</h2>
+        <h2>Hello! <br/> Welcome Back</h2>
         <form onSubmit={handleSubmit}>
           <div className="input-group">
-            <label>Usuario:</label>
             <input
+              placeholder='Username'
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
           <div className="input-group">
-            <label>Contraseña:</label>
             <input
+              placeholder='Password'
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <button type="submit">Iniciar Sesión</button>
+          <button type="submit" className="login-button">Log In</button>
         </form>
+        <p className='signup-text'>
+          You don't have an account?
+        </p>
+        <button type="button" onClick={() => navigate('/signup')} className='signup-button'>
+          Sign Up
+        </button>
+      </div>
       </div>
     </div>
   );
