@@ -1,0 +1,72 @@
+/* Contenedor principal con dos columnas */
+.login-page {
+    display: flex;
+    height: 100vh; /* Ocupa toda la altura de la pantalla */
+  }
+  
+  /* Sección de la imagen */
+  .image-section {
+    flex: 1; /* Ocupa la mitad del espacio */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0; /* Color de fondo opcional */
+  }
+  
+  .image-section img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  /* Sección del formulario */
+  .form-section {
+    flex: 1; /* Ocupa la otra mitad */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: white;
+  }
+  
+  h2 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .input-group {
+    margin-bottom: 15px;
+    width: 100%;
+    max-width: 300px;
+    text-align: left;
+  }
+  
+  .input-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  button {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
