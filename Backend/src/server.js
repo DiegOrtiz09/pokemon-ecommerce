@@ -11,16 +11,6 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 
-//Get route to obtain the pokemon list (first 20 pokemon)
-app.get('/api/pokemon', async (req, res) => {
-    try{
-        const response = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=20');
-        res.json(response.data.results);
-    } catch (error){
-        res.status(500).json({ message: 'Error Fetching Pokemon Data' });
-    } 
-});
-
 //Make the conection with the DataBase
 const {Pool} = require('pg');
 const { config } = require('dotenv');
@@ -42,6 +32,124 @@ pool.on('connect', () =>{
 pool.on('error', (err) =>{
     console.log('Error connecting the Database: ', err);
 });
+
+//Get route to obtain the pokemon list (first 20 pokemon)
+app.get('/api/pokemon', async (req, res) => {
+    try {
+        const offset = req.query.offset || 0; //obtain the offset from query (0 por defecto)
+        const limit = 20;
+
+        // Get the first 20 pokemon
+        const response = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`);
+        const pokemonList = response.data.results;
+
+        // Get pokemon details and add it to the database
+        const pokemonDetails = await Promise.all(
+            pokemonList.map(async (pokemon) => {
+                const details = await axios.get(pokemon.url);
+                const pokeapiId = details.data.id;
+                const name = details.data.name;
+                const types = details.data.types.map(t => t.type.name);
+                const abilities = details.data.abilities.map(a => a.ability.name);
+
+                // Generate the price deppending on its type and abilities
+                const price = generatePrice(types, abilities);
+
+                // Save pokemon in DB
+                await pool.query(
+                    `INSERT INTO pokemon (name, pokeapi_id, price, stock)
+                     VALUES ($1, $2, $3, $4)
+                     ON CONFLICT (pokeapi_id) DO NOTHING`,
+                    [name, pokeapiId, price, 0] // Stock inicial: 0
+                );
+
+                return {
+                    name: name,
+                    pokeapi_id: pokeapiId,
+                    image: details.data.sprites.front_default,
+                    types: types,
+                    abilities: abilities,
+                    price: price,
+                };
+            })
+        );
+
+        res.json(pokemonDetails);
+    } catch (error) {
+        console.error('Error fetching Pokémon data:', error);
+        res.status(500).json({ message: 'Error Fetching Pokemon Data' });
+    }
+});
+
+//Get pokemon details
+app.get('/api/pokemon/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const result = await pool.query('SELECT * FROM pokemon WHERE pokeapi_id = $1', [id]);
+
+        if (result.rows.length > 0) {
+            res.json(result.rows[0]);
+        } else {
+            res.status(404).json({ message: 'Pokémon not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching Pokémon details:', error);
+        res.status(500).json({ message: 'Error fetching Pokémon details' });
+    }
+});
+
+//Generate the price of the pokemon
+const generatePrice = (types, abilities) => {
+    // Prices deppending on its type
+    const typePrices = {
+        'fire': 120,
+        'water': 110,
+        'grass': 100,
+        'electric': 130,
+        'dragon': 200,
+        'psychic': 150,
+        'fighting': 140,
+        'flying': 110,
+        'poison': 100,
+        'ground': 120,
+        'rock': 130,
+        'ice': 110,
+        'bug': 90,
+        'ghost': 150,
+        'steel': 160,
+        'fairy': 140,
+        'dark': 130,
+        'normal': 100,
+    };
+
+    // adjust by special abilities
+    const abilityAdjustments = {
+        'levitate': 20,
+        'intimidate': 15,
+        'speed-boost': 25,
+        'wonder-guard': 50,
+        'magic-guard': 30,
+    
+    };
+
+    // Calculate the price deppending on its type
+    const basePrice = types.reduce((maxPrice, type) => {
+        return Math.max(maxPrice, typePrices[type] || 100);
+    }, 100);
+
+    // Calculate adding abilities
+    const abilityAdjustment = abilities.reduce((total, ability) => {
+        return total + (abilityAdjustments[ability] || 0);
+    }, 0);
+
+    // Final Price
+    const finalPrice = basePrice + abilityAdjustment;
+
+    return finalPrice;
+};
+
+
 
 //Endpoint for SIGNUP
 app.post('/api/signup', async (req, res) => {
@@ -100,16 +208,6 @@ app.post('/api/login', async (req, res) => {
         res.status(500).json({ message: 'Error durante el login', error });
     }
 });
-
-//Try if there's connection with the DB
-/*app.get('/api/test-db', async (req, res) => {
-    try {
-      const { rows } = await pool.query('SELECT NOW()');
-      res.json({ message: 'Conexión exitosa', time: rows[0].now });
-    } catch (error) {
-      res.status(500).json({ message: 'Error en la conexión a la base de datos', error });
-    }
-  });*/
 
 app.listen(PORT, () => {
     console.log('Server Running on port 5000');

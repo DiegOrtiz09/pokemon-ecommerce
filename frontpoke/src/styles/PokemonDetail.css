@@ -1,0 +1,24 @@
+.pokemon-detail {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .pokemon-detail-image {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .favorite-button, .cart-button {
+    margin: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  
+  .favorite-button {
+    background-color: #ffcc00;
+  }
+  
+  .cart-button {
+    background-color: #4caf50;
+    color: white;
+  }

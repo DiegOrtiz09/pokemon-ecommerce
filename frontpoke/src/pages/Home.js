@@ -1,28 +1,42 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Home.css'
+import axios from 'axios';
 
 const Home = () => {
   const [pokemonList, setPokemonList] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const limit = 20;
+  const navigate = useNavigate();
 
-  //Simulacion de una lista de pokemon
-  useEffect(() =>{
-    const mockPokemonList = [
-      {name: 'Pikachu', 
-        type:'Electric', 
-        price:100, 
-        image:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png'},
-        { name: 'Bulbasaur', 
-          type: 'Planta', 
-          price: 120, 
-          image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png' },
-        { name: 'Charmander', 
-          type: 'Fire', 
-          price: 110, 
-          image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png' }
-    ];
-    setPokemonList(mockPokemonList);
-  }, []);
+  //Obtain the pokemon list from pokeapi and DB
+  useEffect(() => {
+    const fetchPokemon = async () => {
+      try {
+        const offset = currentPage * limit;
+        const response = await axios.get(`http://localhost:5000/api/pokemon?offset=${offset}`);
+        setPokemonList(response.data);
+      } catch (error) {
+        console.error('Error fetching Pokémon data:', error);
+      }
+    };
 
+    fetchPokemon();
+  }, [currentPage]); //Dependencia: se ejecuta cuando cambia currentPage
+
+const handleNextPage = () => {
+  setCurrentPage((prevPage) => prevPage + 1); //Go next page
+};
+const handlePreviousPage = () => {
+  if (currentPage > 0) {
+    setCurrentPage((prevPage) => prevPage - 1); // Go previous page
+  }
+};
+
+const handlePokemonClick = (id) => {
+  console.log('pokemon id:' , id);
+  navigate(`/pokemon/${id}`);
+}
 
   return (
     <div className="home-page">
@@ -30,15 +44,27 @@ const Home = () => {
       <p>You will find a big amount of pokemon you can buy</p>
 
       {/*Container for products (pokemon) */}
-        <div className="pokemon-grid">
+      <div className="pokemon-grid">
+      
           {pokemonList.map((pokemon, index) => (
-            <div key={index} className="pokemon-card">
+            <div key={index} className="pokemon-card" onClick={() => handlePokemonClick(pokemon.pokeapi_id)}>
               <img src={pokemon.image} alt={pokemon.name} className="pokemon-image" />
               <h3 className="pokemon-name">{pokemon.name}</h3>
-              <p className="pokemon-type">{pokemon.type}</p>
+              <p className="pokemon-type">{pokemon.types.join(', ')}</p>
               <p className="pokemon-price">${pokemon.price}</p>
             </div>
         ))}
+      </div>
+
+
+
+
+      <div className='pagination'>
+      <button onClick={handlePreviousPage} disabled={currentPage === 0}>
+          Prev
+        </button>
+        <span>Page {currentPage + 1}</span>
+        <button onClick={handleNextPage}>Next</button>
       </div>
     </div>
   );

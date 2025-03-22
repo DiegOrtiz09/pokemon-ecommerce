@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Home from './pages/Home';
+import PokemonDetail from './pages/PokemonDetail';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -38,6 +39,7 @@ const AppContent = ({ isAuthenticated, setIsAuthenticated }) => {
         <Route path='/signup' element={<Signup /> }/>
         <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/home" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
+        <Route path="/pokemon/:id" element={<PokemonDetail />} />
         <Route path="*" element={<Navigate to="/login" />} /> {/* Redirige a login si la ruta no existe */}
       </Routes>
     </div>
