@@ -1,24 +1,47 @@
-.pokemon-detail {
-    text-align: center;
-    padding: 20px;
-  }
-  
-  .pokemon-detail-image {
-    width: 200px;
-    height: 200px;
-  }
-  
-  .favorite-button, .cart-button {
-    margin: 10px;
-    padding: 10px 20px;
-    cursor: pointer;
-  }
-  
-  .favorite-button {
-    background-color: #ffcc00;
-  }
-  
-  .cart-button {
-    background-color: #4caf50;
-    color: white;
-  }
+.pokemon-detail-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  max-width: 600px;
+  margin: 100px auto 0;
+  background-color: #ffffff;
+  border-radius: 10px;
+
+}
+
+.pokemon-info {
+  text-align: center;
+  margin-right: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pokemon-data {
+  background-color: #ffeca26a;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pokemon-detail-image {
+  width: 200px;
+  height: 200px;
+}
+
+.favorite-button, .cart-button {
+  margin: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+}
+
+.favorite-button {
+  background-color: #ffcc00;
+}
+
+.cart-button {
+  background-color: #4CAF50;
+  color: white;
+}
