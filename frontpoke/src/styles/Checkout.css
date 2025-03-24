@@ -1,0 +1,36 @@
+.checkout-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    background-color: #f9f9f9;
+    padding: 20px;
+  }
+  
+  .checkout-success h1 {
+    font-size: 2.5rem;
+    color: #4CAF50; /* Verde para indicar éxito */
+    margin-bottom: 20px;
+  }
+  
+  .checkout-success p {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 30px;
+  }
+  
+  .checkout-success button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .checkout-success button:hover {
+    background-color: #0056b3;
+  }
