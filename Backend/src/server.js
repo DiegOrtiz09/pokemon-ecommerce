@@ -149,6 +149,140 @@ const generatePrice = (types, abilities) => {
     return finalPrice;
 };
 
+//Logic of the shopping cart
+app.post('/api/cart', async (req, res) => {
+    try {
+        const { user_id, pokemon_id, quantity } = req.body;
+
+        // Get pokemon price from DB
+        const pokemonResult = await pool.query('SELECT price FROM pokemon WHERE id = $1', [pokemon_id]);
+        const price = pokemonResult.rows[0].price;
+
+        // put it in shopping cart
+        const result = await pool.query(
+            'INSERT INTO cart (user_id, pokemon_id, quantity, price) VALUES ($1, $2, $3, $4) ON CONFLICT (user_id, pokemon_id) DO UPDATE SET quantity = cart.quantity + EXCLUDED.quantity RETURNING *;',
+            [user_id, pokemon_id, quantity, price]
+        );
+
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error('Error adding to cart:', error);
+        res.status(500).json({ message: 'Error adding to cart' });
+    }
+});
+
+//Get the cart data
+app.get('/api/cart', async (req, res) => {
+    const { user_id } = req.query;
+    try {
+        
+        const result = await pool.query(
+            `SELECT cart.id, cart.user_id, cart.quantity, cart.price, 
+            pokemon.pokeapi_id FROM cart JOIN pokemon ON 
+            cart.pokemon_id = pokemon.id WHERE cart.user_id = $1`,
+            [user_id]
+        );
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Error fetching cart items:', error);
+        res.status(500).json({ message: 'Error fetching cart items' });
+    }
+});
+
+
+//Calculate the paid of the cart
+app.get('/api/cart/total', async (req, res) => {
+    try {
+        const { user_id } = req.query;
+
+        result = await pool.query(
+            'SELECT SUM(price * quantity) AS total FROM cart WHERE user_id = $1',
+        [user_id]
+        );
+
+        res.json({ total: result.rows[0].total || 0 });
+    } catch (error) {
+        console.error('Error calculating total:', error);
+        res.status(500).json({ message: 'Error calculating total' });
+    }
+});
+
+//Endpoint to delete data of the Shoping cart
+app.delete('/api/cart', async (req, res) => {
+    try {
+        await pool.query('DELETE FROM cart');
+
+        res.json({ message: 'Cart emptied' });
+    } catch (error) {
+        console.error('Error empting the cart:', error);
+        res.status(500).json({ message: 'Error empting the cart:' });
+    }
+});
+
+//Endpoint to delete just 1 item from shopping cart
+app.delete('/api/cart/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        await pool.query('DELETE FROM cart WHERE id = $1', [id]);
+        res.json({ message: 'Product Deleted' });
+    } catch (error) {
+        console.error('Error deleting the product:', error);
+        res.status(500).json({ message: 'Error deleting de product' });
+    }
+});
+
+//Endpoint to add a product to favorites
+app.post('/api/favorites', async (req, res) => {
+    try {
+        const { user_id, pokemon_id } = req.body;
+
+        const result = await pool.query(
+            'INSERT INTO favorites (user_id, pokemon_id) VALUES ($1, $2) ON CONFLICT DO NOTHING RETURNING *',
+            [user_id, pokemon_id]
+        );
+
+        if (result.rowCount === 0) {
+            return res.status(409).json({ message: 'Already in favorites' });
+        }
+
+        res.json({ message: 'Added to favorites', data: result.rows[0] });
+    } catch (error) {
+        console.error('Error adding to favorites:', error);
+        res.status(500).json({ message: 'Error adding to favorites' });
+    }
+});
+
+//Enpoint to delete from favorites
+app.delete("/api/favorites/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        await pool.query(`DELETE FROM favorites WHERE id = $1`, [id]);
+
+        res.json({ message: "Pokémon eliminado de favoritos" });
+    } catch (error) {
+        console.error("Error removing favorite:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+//Enpoint to get favorites list
+app.get("/api/favorites/:user_id", async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const result = await pool.query(
+        `SELECT favorites.id, pokemon.name, pokemon.pokeapi_id
+        FROM favorites
+        JOIN pokemon ON favorites.pokemon_id = pokemon.id
+        WHERE favorites.user_id = $1`, 
+        [user_id]
+    );      
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Error fetching favorites:", error);
+    res.status(500).json({ message: "Error fetching favorites" });
+  }
+});
 
 
 //Endpoint for SIGNUP
@@ -183,7 +317,7 @@ app.post('/api/login', async (req, res) => {
 
     try {
         // Search user in DB
-        const { rows } = await pool.query('SELECT username, pass FROM users WHERE username = $1', [username]);
+        const { rows } = await pool.query('SELECT id, username, pass FROM users WHERE username = $1', [username]);
 
         if (rows.length === 0) {
             // If the user was not found
@@ -202,7 +336,7 @@ app.post('/api/login', async (req, res) => {
         // When both are correct. Generate a jwt token
         const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        res.json({ token });
+        res.json({ token, id: user.id });
     } catch (error) {
         console.error('Error durante el login:', error);
         res.status(500).json({ message: 'Error durante el login', error });
