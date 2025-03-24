@@ -23,6 +23,7 @@ const Login = ({ setIsAuthenticated }) => {
 
             if (response.ok) {
                 localStorage.setItem('token', data.token); // Save token in localstorage
+                localStorage.setItem("user_id", data.id); // Save user_id
                 setIsAuthenticated(true); // Update the authentication status
                 navigate('/home'); // Redirigir a la página de inicio
             } else {
@@ -37,13 +38,13 @@ const Login = ({ setIsAuthenticated }) => {
 
   return (
     <div className="login-page">
-      {/* Sección de la imagen */}
+      {/* image section */}
       <div className="image-section">
         <img src="/images/pokeimg.png" alt="Imagen de Login" />
       </div>
 
       <div className='form-container'>
-      {/* Sección del formulario */}
+      {/* form section */}
       <div className="form-section">
         <h2>Hello! <br/> Welcome Back</h2>
         <form onSubmit={handleSubmit}>

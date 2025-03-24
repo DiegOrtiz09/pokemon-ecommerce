@@ -2,10 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Home.css'
 import axios from 'axios';
+import { FaSearch } from 'react-icons/fa';
+
 
 const Home = () => {
   const [pokemonList, setPokemonList] = useState([]);
+  const [filteredPokemonList, setFilteredPokemonList] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
   const limit = 20;
   const navigate = useNavigate();
 
@@ -16,13 +20,14 @@ const Home = () => {
         const offset = currentPage * limit;
         const response = await axios.get(`http://localhost:5000/api/pokemon?offset=${offset}`);
         setPokemonList(response.data);
+        setFilteredPokemonList(response.data);
       } catch (error) {
         console.error('Error fetching Pokémon data:', error);
       }
     };
-
     fetchPokemon();
   }, [currentPage]); //Dependencia: se ejecuta cuando cambia currentPage
+
 
 const handleNextPage = () => {
   setCurrentPage((prevPage) => prevPage + 1); //Go next page
@@ -43,10 +48,11 @@ const handlePokemonClick = (id) => {
       <h1>Welcome to PokéVerse</h1>
       <p>You will find a big amount of pokemon you can buy</p>
 
+
       {/*Container for products (pokemon) */}
       <div className="pokemon-grid">
       
-          {pokemonList.map((pokemon, index) => (
+          {filteredPokemonList.map((pokemon, index) => (
             <div key={index} className="pokemon-card" onClick={() => handlePokemonClick(pokemon.pokeapi_id)}>
               <img src={pokemon.image} alt={pokemon.name} className="pokemon-image" />
               <h3 className="pokemon-name">{pokemon.name}</h3>
@@ -55,9 +61,6 @@ const handlePokemonClick = (id) => {
             </div>
         ))}
       </div>
-
-
-
 
       <div className='pagination'>
       <button onClick={handlePreviousPage} disabled={currentPage === 0}>
