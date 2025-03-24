@@ -6,20 +6,19 @@ import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Home from './pages/Home';
 import PokemonDetail from './pages/PokemonDetail';
+import ShoppingCart from './pages/ShoppingCart';
+import Checkout from './pages/Checkout';
+import Favorite from './pages/Favorite'
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
-/*useEffect(() => {
-  const authStatus = localStorage.getItem('isAuthenticated');
-  setIsAuthenticated(authStatus === 'true')
-}, []);*/
 useEffect(() => {
   const token = localStorage.getItem('token');
   setIsAuthenticated(!!token); //It turns the token in boolean
 }, []);
 
-if (isAuthenticated === null) return <div>Loading...</div>; // Evita render hasta confirmar autenticación
+if (isAuthenticated === null) return <div>Loading...</div>;
 
   return (
     <Router>
@@ -30,7 +29,17 @@ if (isAuthenticated === null) return <div>Loading...</div>; // Evita render hast
 
 const AppContent = ({ isAuthenticated, setIsAuthenticated }) => {
   const location = useLocation();
-  const showHeader = location.pathname !== '/login' && location.pathname !== '/signup'; // Hide Header in login and signup
+  const [userId, setUserId] = useState(null);
+
+
+  useEffect(() => {
+    const storedUserId = localStorage.getItem("user_id");
+    if (storedUserId) {
+        setUserId(Number(storedUserId));
+    }
+  }, []);
+
+  const showHeader = location.pathname !== '/login' && location.pathname !== '/signup';
 
   return (
     <div>
@@ -40,7 +49,11 @@ const AppContent = ({ isAuthenticated, setIsAuthenticated }) => {
         <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/home" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
         <Route path="/pokemon/:id" element={<PokemonDetail />} />
-        <Route path="*" element={<Navigate to="/login" />} /> {/* Redirige a login si la ruta no existe */}
+        <Route path="/cart" element={isAuthenticated ? <ShoppingCart userId={userId} /> : <Navigate to="/login" />}/>
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/favorite" element={isAuthenticated ? <Favorite userId={userId} /> : <Navigate to="/login" />}/>
+        <Route path="*" element={<Navigate to="/login" />} /> {/* Go login if the route doesnot exist */}
+        
       </Routes>
     </div>
   );
